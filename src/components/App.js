@@ -1,16 +1,28 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {connect} from "react-redux"
 import store from "../store/store";
 
-const App = ({person,submitHandle, changeFieldHandle})=>{
+const App = ({person,persons, addPerson, changeFieldHandle})=>{
+
+    useEffect(()=>{
+        console.log(person)
+    },[person])
+    useEffect(()=>{
+        console.log(persons)
+    },[persons])
 
     const changeHandle = (event)=>{
         changeFieldHandle(event.target.name, event.target.value)
     }
+
+    const submitHandle = (event)=>{
+        event.preventDefault()
+        addPerson(person)
+    }
     return(
         <div className="container">
                 <div className="w-50 mx-auto">
-                    <form onSubmit={()=>{submitHandle(person)}}>
+                    <form onSubmit={submitHandle}>
                         <div className="form-group">
                             <label>First Name</label>
                             <input className="form-control" type="text" name="fName"  onChange={changeHandle}/>
@@ -42,11 +54,12 @@ const mapStateToProps=(state)=>{
 
 
 
+
 const mapDispatchToProps = (dispatch)=>{
     return{
         changeFieldHandle:(name, value)=>dispatch({type:"SET_PERSON", payload: {name, value}}),
-        submitHandle:(person)=>dispatch({type:"ADD_PERSON", payload:store.getState().person})
+        addPerson:(person)=>dispatch({type:"ADD_PERSON", payload:person})
     }
 }
-store.subscribe(()=>console.log(store.getState()))
+// store.subscribe(()=>console.log(store.getState()))
 export default connect(mapStateToProps, mapDispatchToProps)(App)
