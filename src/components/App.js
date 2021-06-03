@@ -4,21 +4,24 @@ import store from "../store/store";
 
 const App = ({person,submitHandle, changeFieldHandle})=>{
 
+    const changeHandle = (event)=>{
+        changeFieldHandle(event.target.name, event.target.value)
+    }
     return(
         <div className="container">
                 <div className="w-50 mx-auto">
                     <form onSubmit={()=>{submitHandle(person)}}>
                         <div className="form-group">
                             <label>First Name</label>
-                            <input className="form-control" type="text" name="fName"  onChange={changeFieldHandle}/>
+                            <input className="form-control" type="text" name="fName"  onChange={changeHandle}/>
                         </div>
                         <div className="form-group">
                             <label>Last Name</label>
-                            <input className="form-control" type="text" name="lName"  onChange={changeFieldHandle}/>
+                            <input className="form-control" type="text" name="lName"  onChange={changeHandle}/>
                         </div>
                         <div className="form-group">
                             <label>Phone</label>
-                            <input className="form-control" type="text" name="phone"  onChange={changeFieldHandle}/>
+                            <input className="form-control" type="text" name="phone"  onChange={changeHandle}/>
                         </div>
                         <div className="form-group">
                             <button type="submit" className="btn btn-primary w-100">Add</button>
@@ -29,13 +32,21 @@ const App = ({person,submitHandle, changeFieldHandle})=>{
     )
 }
 
+const mapStateToProps=(state)=>{
+
+    return{
+        person:state.person,
+        persons:state.persons
+    }
+}
+
 
 
 const mapDispatchToProps = (dispatch)=>{
     return{
-        changeFieldHandle:(event)=>dispatch({type:"SET_PERSON", payload:{[event.target.name]:event.target.value}}),
+        changeFieldHandle:(name, value)=>dispatch({type:"SET_PERSON", payload: {name, value}}),
         submitHandle:(person)=>dispatch({type:"ADD_PERSON", payload:store.getState().person})
     }
 }
-store.subscribe((person)=>console.log(store.getState(person)))
-export default connect(null, mapDispatchToProps)(App)
+store.subscribe(()=>console.log(store.getState()))
+export default connect(mapStateToProps, mapDispatchToProps)(App)

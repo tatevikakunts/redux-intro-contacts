@@ -1,5 +1,4 @@
 const initState = {
-
     person:{
         fName:"",
         lName:"",
@@ -11,10 +10,11 @@ const initState = {
 const reducer = (state=initState, action)=>{
     switch (action.type){
         case "ADD_PERSON":
-            const _arr = [...state.persons, action.payload]
-            return{...state, persons:_arr}
+            const _arr = [...state.persons, state.person]
+            return{...state, persons:_arr, person:{}}
         case "SET_PERSON":
-            return{...state, person:action.payload}
+            const {name, value}= action.payload
+            return{...state, person:{...state.person,  [name]:value}}
 
         default:
             return state
